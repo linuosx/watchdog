@@ -1,0 +1,31 @@
+services:
+  url-tester:
+    image: nexus/watchdog:latest
+    build: 
+      context: src
+      dockerfile: ../docker/Dockerfile
+    container_name: nexus_watchdog
+    restart: unless-stopped
+
+    environment:
+      - SLACK_WEBHOOK_URL=$SLACK_WEBHOOK_URL
+      - URL=$URL
+      - REQUEST_TIMEOUT=$REQUEST_TIMEOUT
+      - CHECK_INTERVAL=$CHECK_INTERVAL
+      - HOSTNAME=$HOSTNAME
+    profiles:
+      - test
+      - production
+
+  nginx:
+    image: openresty/openresty:alpine
+    container_name: nexus_nginx
+    restart: unless-stopped
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "8080:80"
+      - "8443:443"
+    profiles:
+      - test
+      - backend
