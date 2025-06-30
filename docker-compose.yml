@@ -6,7 +6,6 @@ services:
       dockerfile: ../docker/Dockerfile
     container_name: nexus_watchdog
     restart: unless-stopped
-
     environment:
       - SLACK_WEBHOOK_URL=$SLACK_WEBHOOK_URL
       - URL=$URL
@@ -18,6 +17,8 @@ services:
       - production
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    logging:
+      driver: journald
 
   nginx:
     image: openresty/openresty:alpine
@@ -31,3 +32,5 @@ services:
     profiles:
       - test
       - backend
+    logging:
+      driver: journald
