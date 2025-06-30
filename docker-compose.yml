@@ -16,6 +16,8 @@ services:
     profiles:
       - test
       - production
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   nginx:
     image: openresty/openresty:alpine
